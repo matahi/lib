@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head><title>R: Hierarchical Dirichlet Process for categorical count data</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+<h1> Hierarchical Dirichlet Process for categorical count data
+<img class="toplogo" src="../../../doc/html/logo.jpg" alt="[R logo]" />
+</h1>
+<hr/>
+<div style="text-align: center;">
+<a href="../../../doc/html/packages.html"><img class="arrow" src="../../../doc/html/left.jpg" alt="[Up]" /></a>
+<a href="../../../doc/html/index.html"><img class="arrow" src="../../../doc/html/up.jpg" alt="[Top]" /></a>
+</div><h2>Documentation for package &lsquo;hdp&rsquo; version 0.1.0</h2>
+
+<ul><li><a href="../DESCRIPTION">DESCRIPTION file</a>.</li>
+</ul>
+
+<h2>Help Pages</h2>
+
+
+<p style="text-align: center;">
+<a href="#A">A</a>
+<a href="#B">B</a>
+<a href="#C">C</a>
+<a href="#D">D</a>
+<a href="#E">E</a>
+<a href="#F">F</a>
+<a href="#H">H</a>
+<a href="#L">L</a>
+<a href="#M">M</a>
+<a href="#N">N</a>
+<a href="#P">P</a>
+<a href="#S">S</a>
+</p>
+
+
+<h2><a name="A">-- A --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpState-class.html">activating_seed</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">activating_seed-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpBase-class.html">as.list-method</a></td>
+<td>hdpBase class for the base distribution</td></tr>
+<tr><td style="width: 25%;"><a href="hdpConparam-class.html">as.list-method</a></td>
+<td>hdpConparam class for the DP concentration parameter/s</td></tr>
+<tr><td style="width: 25%;"><a href="hdpDP-class.html">as.list-method</a></td>
+<td>hdpDP class for a DP node</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">as.list-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">as.list-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">as.list-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+</table>
+
+<h2><a name="B">-- B --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpState-class.html">base</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">base-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">base_params</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">base_params-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+</table>
+
+<h2><a name="C">-- C --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">chains</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">chains-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">clust_categ_counts</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">clust_categ_counts-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">clust_dp_counts</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">clust_dp_counts-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="comp_categ_counts.html">comp_categ_counts</a></td>
+<td>Get sample vs category counts for each component</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">comp_categ_counts-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">comp_categ_counts-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="comp_categ_distn.html">comp_categ_distn</a></td>
+<td>Get mean distribution over data categories for each component</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">comp_categ_distn-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">comp_categ_distn-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="comp_cos_merge.html">comp_cos_merge</a></td>
+<td>Get cos.merge setting</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">comp_cos_merge-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">comp_cos_merge-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="comp_dp_counts.html">comp_dp_counts</a></td>
+<td>Get sample vs component counts for each DP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">comp_dp_counts-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">comp_dp_counts-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="comp_dp_distn.html">comp_dp_distn</a></td>
+<td>Get mean distribution over components for each DP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">comp_dp_distn-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">comp_dp_distn-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">conparam</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">conparam-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">cpindex</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">cpindex-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">cp_values</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">cp_values-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="cull_posterior_samples.html">cull_posterior_samples</a></td>
+<td>Cull early posterior samples from a hdpSampleChain object</td></tr>
+</table>
+
+<h2><a name="D">-- D --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpState-class.html">dp</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">dp-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">dpstate</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">dpstate-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="dp_activate.html">dp_activate</a></td>
+<td>Activate DP nodes</td></tr>
+<tr><td style="width: 25%;"><a href="dp_freeze.html">dp_freeze</a></td>
+<td>Freeze DP nodes</td></tr>
+</table>
+
+<h2><a name="E">-- E --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="example_data_hdp.html">example_data_hdp</a></td>
+<td>Fake categorical count data</td></tr>
+<tr><td style="width: 25%;"><a href="example_data_hdp_prior.html">example_data_hdp_prior</a></td>
+<td>Fake categorical count data with priors</td></tr>
+<tr><td style="width: 25%;"><a href="example_known_priors.html">example_known_priors</a></td>
+<td>Example known priors</td></tr>
+</table>
+
+<h2><a name="F">-- F --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">final_hdpState</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">final_hdpState-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+</table>
+
+<h2><a name="H">-- H --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpBase-class.html">hdpBase-class</a></td>
+<td>hdpBase class for the base distribution</td></tr>
+<tr><td style="width: 25%;"><a href="hdpConparam-class.html">hdpConparam-class</a></td>
+<td>hdpConparam class for the DP concentration parameter/s</td></tr>
+<tr><td style="width: 25%;"><a href="hdpDP-class.html">hdpDP-class</a></td>
+<td>hdpDP class for a DP node</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">hdpSampleChain-class</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">hdpSampleMulti-class</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">hdpState-class</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_addconparam.html">hdp_addconparam</a></td>
+<td>Add concentration parameters to a hdpState object</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_adddp.html">hdp_adddp</a></td>
+<td>Add DPs to a hdpState object</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_extract_components.html">hdp_extract_components</a></td>
+<td>Extract major components from the raw clusters</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_extract_components.html">hdp_extract_components-method</a></td>
+<td>Extract major components from the raw clusters</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_init.html">hdp_init</a></td>
+<td>Initialise a hdpState object</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_multi_chain.html">hdp_multi_chain</a></td>
+<td>Gather multiple independent posterior sampling chains for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_posterior.html">hdp_posterior</a></td>
+<td>Posterior sampling chain across activated DPs.</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_prior_init.html">hdp_prior_init</a></td>
+<td>Initialise a HDP structure incorporating prior knowledge</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_quick_init.html">hdp_quick_init</a></td>
+<td>Initialise a simple, default HDP structure</td></tr>
+<tr><td style="width: 25%;"><a href="hdp_setdata.html">hdp_setdata</a></td>
+<td>Assign data to DP nodes in a hdpState object</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">hdp_settings</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">hdp_settings-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+</table>
+
+<h2><a name="L">-- L --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">lik</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">lik-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="lusc_count.html">lusc_count</a></td>
+<td>Lung squamous cell carcinoma mutation data</td></tr>
+<tr><td style="width: 25%;"><a href="lusc_multi.html">lusc_multi</a></td>
+<td>Posterior sampling chains for LUSC data, conditional on previous HDP</td></tr>
+</table>
+
+<h2><a name="M">-- M --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="mut_count.html">mut_count</a></td>
+<td>Cancer mutation count data</td></tr>
+<tr><td style="width: 25%;"><a href="mut_example_chain.html">mut_example_chain</a></td>
+<td>Posterior sampling chain with cancer mutation data</td></tr>
+<tr><td style="width: 25%;"><a href="mut_example_multi.html">mut_example_multi</a></td>
+<td>Multiple posterior sampling chains with cancer mutation data</td></tr>
+</table>
+
+<h2><a name="N">-- N --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpState-class.html">numcateg</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">numcateg-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">numcluster</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">numcluster-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="numcomp.html">numcomp</a></td>
+<td>Get number of extracted components</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">numcomp-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">numcomp-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">numconparam</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">numconparam-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpDP-class.html">numdata</a></td>
+<td>hdpDP class for a DP node</td></tr>
+<tr><td style="width: 25%;"><a href="hdpDP-class.html">numdata-method</a></td>
+<td>hdpDP class for a DP node</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">numdp</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">numdp-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+</table>
+
+<h2><a name="P">-- P --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="plotchain.html">plotchain</a></td>
+<td>Diagnostic plots for HDP posterior sampling chain</td></tr>
+<tr><td style="width: 25%;"><a href="plotcomp.html">plotcomp</a></td>
+<td>Plot extracted components</td></tr>
+<tr><td style="width: 25%;"><a href="plotcomp.html">plot_comp_distn</a></td>
+<td>Plot extracted components</td></tr>
+<tr><td style="width: 25%;"><a href="plotcomp.html">plot_comp_size</a></td>
+<td>Plot extracted components</td></tr>
+<tr><td style="width: 25%;"><a href="plotchain.html">plot_data_assigned</a></td>
+<td>Diagnostic plots for HDP posterior sampling chain</td></tr>
+<tr><td style="width: 25%;"><a href="plotcomp.html">plot_dp_comp_exposure</a></td>
+<td>Plot extracted components</td></tr>
+<tr><td style="width: 25%;"><a href="plotchain.html">plot_lik</a></td>
+<td>Diagnostic plots for HDP posterior sampling chain</td></tr>
+<tr><td style="width: 25%;"><a href="plotchain.html">plot_numcluster</a></td>
+<td>Diagnostic plots for HDP posterior sampling chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">ppindex</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">ppindex-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="prop.ex.html">prop.ex</a></td>
+<td>Get proportion of dataset explained (on average)</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">prop.ex-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleMulti-class.html">prop.ex-method</a></td>
+<td>hdpSampleMulti class for multiple independent hdpSampleChain objects for the same HDP</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">pseudoDP</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+<tr><td style="width: 25%;"><a href="hdpState-class.html">pseudoDP-method</a></td>
+<td>hdpState class for a Hierarchical Dirichlet Process in one state</td></tr>
+</table>
+
+<h2><a name="S">-- S --</a></h2>
+
+<table width="100%">
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">sampling_seed</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+<tr><td style="width: 25%;"><a href="hdpSampleChain-class.html">sampling_seed-method</a></td>
+<td>hdpSampleChain class for posterior samples off one MCMC chain</td></tr>
+</table>
+</body></html>

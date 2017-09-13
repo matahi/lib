@@ -1,0 +1,40 @@
+Package: hdp
+Title: Hierarchical Dirichlet Process for categorical count data
+Version: 0.1.0
+Authors@R: c(person("Nicola", "Roberts",
+  email="nr3@sanger.ac.uk", role=c("aut", "cre")),
+  person("Yee Whye", "Teh", role=c("aut", "cph"),
+  comment="MATLAB and C original, http://www.stats.ox.ac.uk/~teh/research/npbayes/npbayes-r21.tgz"))
+Depends: R(>= 3.2)
+Imports: lsa, methods, flexclust, coda, clue, Matrix
+LazyData: true
+Description: Model categorical count data with a hierarchical Dirichlet
+    Process. Includes functions to initialise a HDP with a custom tree
+    structure, perform Gibbs sampling of the posterior distribution,
+    and analyse the output. The underlying mathematical theory is
+    described by Teh et al. (Hierarchical Dirichlet Processes,
+    Journal of the American Statistical Association, 2006, 101:476). This R
+    package was adapted from open source MATLAB and C code written by Yee Whye
+    Teh and available here
+    http://www.stats.ox.ac.uk/~teh/research/npbayes/npbayes-r21.tgz.
+License: file LICENSE
+URL: https://github.com/nicolaroberts/hdp
+BugReports: https://github.com/nicolaroberts/hdp/issues
+Suggests: testthat, SomaticCancerAlterations, GenomicRanges,
+        Biostrings, RColorBrewer, knitr, rmarkdown, BiocStyle, devtools
+Collate: 'aaa-classes-input.R' 'aaa-classes-output.R'
+        'aaa-generics-input.R' 'hdp_extract_comp_multi.R'
+        'hdp_extract_comp_single.R' 'aaa-generics-output.R'
+        'cull_posterior_samples.R' 'dp_activate.R' 'dp_freeze.R'
+        'hdp.R' 'hdp_addconparam.R' 'hdp_adddp.R' 'hdp_getstate.R'
+        'hdp_init.R' 'hdp_multi_chain.R' 'hdp_posterior.R'
+        'hdp_prior_init.R' 'hdp_quick_init.R' 'hdp_setdata.R'
+        'iterate.R' 'plot_chain.R' 'plot_components.R' 'stirling.R'
+        'utilities.R' 'utilities_nr3.R' 'zzz.R'
+VignetteBuilder: knitr
+RoxygenNote: 5.0.1
+Author: Nicola Roberts [aut, cre],
+  Yee Whye Teh [aut, cph] (MATLAB and C original,
+    http://www.stats.ox.ac.uk/~teh/research/npbayes/npbayes-r21.tgz)
+Maintainer: Nicola Roberts <nr3@sanger.ac.uk>
+Built: R 3.3.1; x86_64-apple-darwin13.4.0; 2016-11-01 18:02:21 UTC; unix
