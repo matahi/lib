@@ -1,16 +1,5 @@
-#analyze_chronology <- function(dat.binary, dat.genetics, dat.cytogenetics, genes.info , Gene1, Gene2)
 analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
 {
-        # system("mkdir -p results/supp/Ross/chronology")
-        # dat.genetics <- dat.genetics.bis
-        # Gene1 <- "KRAS"
-        # Gene2 <- "NPM1"
-
-        # dat.binary <- dat
-        # dat.genetics <- Reduce("rbind", dat.genetics.list[1:2])
-        # Gene1 <- "NRAS"
-        # Gene2 <- "SF3B1"
-
         # Samples 
         samples.Gene1_2 <- as.character(rownames(dat.binary)[intersect(which(dat.binary[,Gene1]==1),which(dat.binary[,Gene2]==1))])
 
@@ -43,27 +32,41 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
 
                                      if (Gene1=="FLT3_ITD")
                                      {
-                                             dat.Gene1 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$Gene=="FLT3"),]
+                                             dat.Gene1 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="FLT3_ITD"),]
                                      }
 
                                      if (Gene2=="FLT3_ITD")
                                      {
-                                             dat.Gene2 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="FLT3"),]
+                                             dat.Gene2 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="FLT3_ITD"),]
                                      }
-
 
                                      if (Gene1=="FLT3_TKD")
                                      {
-                                             dat.Gene1 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$Gene=="FLT3"),]
+                                             dat.sample <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k]),]
+                                             pos.info <- sapply(1:nrow(dat.sample), function(n)
+                                                                {
+                                                                        PROTEIN_NUM <- strsplit(dat.sample$PROTEIN_CHANGE[n],"[^0-9]+")[[1]][2]
+                                                                        as.numeric(PROTEIN_NUM)
+                                                                })
+
+                                             FLT3_TKD.samples <- which((dat.sample$gene=="FLT3")&(pos.info > 800)&(pos.info <860))
+                                             dat.Gene1 <- dat.sample[FLT3_TKD.samples,]
                                      }
 
                                      if (Gene2=="FLT3_TKD")
                                      {
-                                             dat.Gene2 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="FLT3"),]
+                                             dat.sample <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k]),]
+                                             pos.info <- sapply(1:nrow(dat.sample), function(n)
+                                                                {
+                                                                        PROTEIN_NUM <- strsplit(dat.sample$PROTEIN_CHANGE[n],"[^0-9]+")[[1]][2]
+                                                                        as.numeric(PROTEIN_NUM)
+                                                                })
+
+                                             FLT3_TKD.samples <- which((dat.sample$gene=="FLT3")&(pos.info > 800)&(pos.info <860))
+                                             dat.Gene2 <- dat.sample[FLT3_TKD.samples,]
                                      }
 
                                      ######
-
                                      if (nrow(dat.Gene1)==0|nrow(dat.Gene2)==0)
                                      {
                                              print("Careful binary matrix and VCF files do not correspond")
@@ -76,31 +79,29 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
                                              Gene2.max <- dat.Gene2[which.max(dat.Gene2$VAF),]
 
                                              m <- round(matrix(c(
-                                                                 Gene1.max$VAF*Gene1.max$TotRead,
-                                                                 Gene1.max$TotRead - Gene1.max$VAF*Gene1.max$TotRead,
-                                                                 Gene2.max$VAF*Gene2.max$TotRead,
-                                                                 Gene2.max$TotRead - Gene2.max$VAF*Gene2.max$TotRead),
+                                                                 Gene1.max$VAF.corr*Gene1.max$TotRead,
+                                                                 Gene1.max$TotRead - Gene1.max$VAF.corr*Gene1.max$TotRead,
+                                                                 Gene2.max$VAF.corr*Gene2.max$TotRead,
+                                                                 Gene2.max$TotRead - Gene2.max$VAF.corr*Gene2.max$TotRead),
                                                                ncol=2))
 
                                              f1 <- try(fisher.test(m, alternative="greater")$p.value < 0.01, silent=T)
                                              if (class(f1) !="try-error")
                                              {
-                                                     if (f1 & Gene1.max$VAF + Gene2.max$VAF  >= 0.5 ) ## TODO: ADVANCED PIDGEONHOLE
+                                                     if (f1 & (Gene1.max$VAF.corr + Gene2.max$VAF.corr > max(dat.sample$VAF.corr,na.rm=T)))
                                                      {
                                                              return(paste0(Gene1, " first"))
                                                      } 
                                              }
 
                                              f2 <- try(fisher.test(m, alternative="less")$p.value < 0.01, silent=T)
-
                                              if (class(f2) !="try-error")
                                              {
-                                                     if (f2 & Gene1.max$VAF + Gene2.max$VAF  >= 0.5 ) ## TODO: ADVANCED PIDGEONHOLE
+                                                     if (f2 & (Gene1.max$VAF.corr + Gene2.max$VAF.corr > max(dat.sample$VAF.corr,na.rm=T)))
                                                      {
                                                              return(paste0(Gene2, " first"))
                                                      } 
                                              }
-
 
                                              return("inconclusive")
                                      } 
