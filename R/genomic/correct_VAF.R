@@ -1,27 +1,29 @@
-correct_VAF <- function(dat.df, CN.effect=data.frame())
+## calculate the 95 CI for the VAF given the number of mutated reads Nmut and the total number of reads Ntot
+calculate_VAF_95CI <- function(Nmut, Ntot)
 {
-        source("./src/lib/genomic/calculate_VAF_95CI.R")
-        # dat.df <- mutation.df
-        # CN.effect <- CN.effect
+        return(qbeta(c(0.025,0.975), Nmut +1, Ntot - Nmut + 1))
+}
 
-        out <- Reduce("rbind", lapply(1:nrow(dat.df), function(n)
+correct_VAF <- function(dat.genetics, gender ,CN.effect=data.frame())
+{
+        out <- Reduce("rbind", lapply(1:nrow(dat.genetics), function(n)
                                       {
                                               # print(n)
-                                              Sample <- as.character(dat.df[n,"ID"])
-                                              VAF <- dat.df[n,"VAF"]
-                                              Gene <- as.character(dat.df[n,"Gene"])
-                                              Chr <- as.character(dat.df[n,"Chr"])
-                                              Ntot <- dat.df[n,"TotRead"]
+                                              Sample <- as.character(dat.genetics[n,"ID"])
+                                              VAF <- dat.genetics[n,"VAF"]
+                                              Gene <- as.character(dat.genetics[n,"Gene"])
+                                              Chr <- as.character(dat.genetics[n,"Chr"])
+                                              Ntot <- dat.genetics[n,"TotRead"]
                                               Nmut <- round(VAF*Ntot)
 
-                                              # Gender <- dat.df[n,"gender"] # 1 is male 2 is female?
-                                              Gender <- 2 # 1 is male 2 is female?
+                                              # 1=Male
+                                              # 0=Female
+                                              Gender <- gender[n]
 
-                                              # if (is.na(Gender))
-                                              # {
-                                              #         Gender <- 2 
-                                              # }
-
+                                              if (is.na(Gender))
+                                              {
+                                                      Gender <- 2 
+                                              }
 
                                               # 1- calculate_VAF_95CI
                                               if (is.na(Ntot))
@@ -54,7 +56,7 @@ correct_VAF <- function(dat.df, CN.effect=data.frame())
                                               {
                                                       if (is.na(VAF_95_CI_low))
                                                       {
-                                                              VAF.corrected <- VAF/2
+                                                              VAF.corrected <- VAF
                                                               correction <- "None"
                                                               new_LCI <- NA
                                                               new_UCI <- NA
@@ -76,11 +78,11 @@ correct_VAF <- function(dat.df, CN.effect=data.frame())
                                                       }
                                               } else if (Gene %in% colnames(CN.effect))
                                               {
-                                                      if (is.na(CN.effect[Sample,Gene]))# Same as if no CN        
+                                                      if (is.na(CN.effect[Sample,Gene])|CN.effect[Sample,Gene]==2)# Same as if no CN        
                                                       {
                                                               if (is.na(VAF_95_CI_low))
                                                               {
-                                                                      VAF.corrected <- VAF/2
+                                                                      VAF.corrected <- VAF
                                                                       correction <- "None"
                                                                       new_LCI <- NA
                                                                       new_UCI <- NA
@@ -100,31 +102,7 @@ correct_VAF <- function(dat.df, CN.effect=data.frame())
                                                                       new_LCI <- calculate_VAF_95CI(round(Nmut/2),Ntot)[1]
                                                                       new_UCI <- calculate_VAF_95CI(round(Nmut/2),Ntot)[2]
                                                               }
-                                                      } else if (CN.effect[Sample,Gene]==0) # no CN 
-                                                      {
-                                                              if (is.na(VAF_95_CI_low))
-                                                              {
-                                                                      VAF.corrected <- VAF/2
-                                                                      correction <- "None"
-                                                                      new_LCI <- NA
-                                                                      new_UCI <- NA
-                                                              } else if (VAF_95_CI_upp<0.65)# else if (VAF_95_CI_low<0.65)
-                                                              {
-                                                                      VAF.corrected <- VAF
-                                                                      correction <- "None"
-                                                                      new_LCI <- VAF_95_CI_low
-                                                                      new_UCI <- VAF_95_CI_upp
-
-                                                              } else
-                                                              {
-                                                                      VAF.corrected <- VAF/2
-                                                                      correction <- "LOH"
-
-                                                                      # In this case: Normal copy was lost and mut copy was amplified. So we were supposed to have Ntot but Nmut/2
-                                                                      new_LCI <- calculate_VAF_95CI(round(Nmut/2),Ntot)[1]
-                                                                      new_UCI <- calculate_VAF_95CI(round(Nmut/2),Ntot)[2]
-                                                              }
-                                                      } else if (CN.effect[Sample,Gene]==-1) # deletion
+                                                      }  else if (CN.effect[Sample,Gene]==1) # deletion
                                                       {
                                                               VAF.corrected <- VAF/2
                                                               correction <- "Deletion"
@@ -133,7 +111,7 @@ correct_VAF <- function(dat.df, CN.effect=data.frame())
                                                               new_LCI <- calculate_VAF_95CI(Nmut,2*Ntot)[1]
                                                               new_UCI <- calculate_VAF_95CI(Nmut,2*Ntot)[2]
 
-                                                      } else if (CN.effect[Sample,Gene]==1) # amplification
+                                                      } else if (CN.effect[Sample,Gene]==3) # amplification
                                                       {
                                                               # First verify if it is CHR.X
                                                               if (is.na(VAF_95_CI_low))
@@ -142,7 +120,7 @@ correct_VAF <- function(dat.df, CN.effect=data.frame())
                                                                       correction <- "None"
                                                                       new_LCI <- VAF_95_CI_low
                                                                       new_UCI <- VAF_95_CI_upp
-                                                              } else if (VAF_95_CI_upp <0.35) # TODO: See if correct
+                                                              } else if (VAF_95_CI_upp <0.65) 
                                                               {
                                                                       VAF.corrected <- VAF *3/2
                                                                       correction <- "Norm Amplification"
@@ -152,7 +130,6 @@ correct_VAF <- function(dat.df, CN.effect=data.frame())
                                                                       new_UCI <- calculate_VAF_95CI(Nmut,round(Ntot*2/3))[2]
                                                               } else
                                                               {
-
                                                                       VAF.corrected <- VAF/2
                                                                       correction <- "Mut Amplification"
 

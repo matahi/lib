@@ -1,15 +1,6 @@
 run_clonality <- function(dat, Gene_study, dat.survival, cols=colors.gene_study, cols.survival=colors.survival_binary)
 {
 
-        # # test
-        # dat <- mutation.df
-        # Gene_study <- "TP53"
-        # dat.survival <- dat.survival
-        # #
-
-
-
-
         Gene.samples <- unique(dat[dat$Gene==Gene_study,"Sample"])
 
         Gene.clonality <- sapply(1:length(Gene.samples), function(k)

@@ -86,8 +86,6 @@ pie_chart <-  function(dat.df, feature.freq, feature.facet, num_col=NA)
                 #geom_text(data=mydf[mydf$value!=0,],aes(label = percent_value, x="", y=position),color="white", size=5)
         }
 
-
-
         return(list(p=p, pval=pval, mydf=mydf))
 }
 

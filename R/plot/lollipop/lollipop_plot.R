@@ -46,10 +46,12 @@ for (n in 1:length(gene.list))
                 print("1. Working on lollipop plot")
                 library(biomaRt)
                 library(ggplot2)
+
                 ## 1. get pfam
                 # i. get transcriptID
                 ensembl <- useMart(biomart="ENSEMBL_MART_ENSEMBL", dataset= "hsapiens_gene_ensembl")
                 cds.infos <- getBM(attributes=c("coding", "cds_length","ensembl_transcript_id"), filters = "hgnc_symbol", values = gene, mart= ensembl)
+
                 # Removing non available sequences
                 cds.infos <- cds.infos[!is.na(cds.infos$cds_length),]
                 # Removing sequences that are not of length /3
