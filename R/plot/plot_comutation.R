@@ -1,3 +1,4 @@
+## edit
 plot_comutation <- function(dat.integrate, out.dir="results/", cache=T, frequent=T, Reordering=NULL)
 {
         system(paste("mkdir -p", paste0(out.dir,"/cache"))) 
