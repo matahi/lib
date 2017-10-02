@@ -3,6 +3,10 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
         # Samples 
         samples.Gene1_2 <- as.character(rownames(dat.binary)[intersect(which(dat.binary[,Gene1]==1),which(dat.binary[,Gene2]==1))])
 
+
+        if (length(samples.Gene1_2)==0)
+                return(NULL)
+
         # What happens if 2 mutations?
         order.info <- sapply(1:length(samples.Gene1_2), function(k)
                              {
@@ -49,7 +53,7 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
                                                                         as.numeric(PROTEIN_NUM)
                                                                 })
 
-                                             FLT3_TKD.samples <- which((dat.sample$gene=="FLT3")&(pos.info > 800)&(pos.info <860))
+                                             FLT3_TKD.samples <- which((dat.sample$Gene=="FLT3")&(pos.info > 800)&(pos.info <860))
                                              dat.Gene1 <- dat.sample[FLT3_TKD.samples,]
                                      }
 
@@ -62,7 +66,7 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
                                                                         as.numeric(PROTEIN_NUM)
                                                                 })
 
-                                             FLT3_TKD.samples <- which((dat.sample$gene=="FLT3")&(pos.info > 800)&(pos.info <860))
+                                             FLT3_TKD.samples <- which((dat.sample$Gene=="FLT3")&(pos.info > 800)&(pos.info <860))
                                              dat.Gene2 <- dat.sample[FLT3_TKD.samples,]
                                      }
 

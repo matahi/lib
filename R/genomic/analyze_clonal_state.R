@@ -13,7 +13,7 @@ analyze_clonal_state <- function(dat.binary, dat.genetics, gene) {
 
                                          # If only one mutation then clonal
                                          if (nrow(dat.sample)==1)
-                                                 return("clonal")
+                                                 return("unique clone")
 
                                          #
                                          # Gene.max <- dat.sample.gene[which.max(dat.sample.gene$VAF),]
@@ -37,19 +37,19 @@ analyze_clonal_state <- function(dat.binary, dat.genetics, gene) {
 
                                                                       if (class(f1) !="try-error")
                                                                               if((f1) & dat.sample$VAF.corr[idx.1] + dat.sample$VAF.corr[idx.2] > max(dat.sample$VAF.corr,na.rm=T))
-                                                                                              return("subclonal")
+                                                                                              return("clonal heterogeneity")
 
                                                                       if (class(f2) !="try-error")
                                                                               if((f2) & dat.sample$VAF.corr[idx.1] + dat.sample$VAF.corr[idx.2] > max(dat.sample$VAF.corr,na.rm=T))
-                                                                                              return("subclonal")
+                                                                                              return("clonal heterogeneity")
 
-                                                                      return("clonal")
+                                                                      return("unique clone")
                                                               })
 
-                                         if (any(pair.comparison=="subclonal"))
-                                                 return("subclonal")
+                                         if (any(pair.comparison=="clonal heterogeneity"))
+                                                 return("clonal heterogeneity")
 
-                                         return("clonal")
+                                         return("unique clone")
                                  })
         return(Gene.clonality)
 }
