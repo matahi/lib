@@ -20,6 +20,7 @@ interaction_three_way <- function (n_tot, n1, n2, n3, observed.val=NULL, bootstr
         hist(three_way.bootstrap)
         abline(v=CI.95[1], col="blue") # 95% lower CI
         abline(v=CI.95[2], col="blue") # 95% higher CI
+
         if (!is.null(observed.val))
         {
                 abline(v=observed.val, col="red")
