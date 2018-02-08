@@ -1,13 +1,30 @@
 run_HDP <- function(dat, 
-                    out.dir="clustering", 
-                    cache=T, 
-                    graphs=F, 
+                    out.dir="./results/clustering", 
+                    cache=F, 
+                    graphs=T, 
                     grouping=NULL, 
-                    fast=F, 
+                    fast=T, 
                     col.colors=NULL,
                     legend.info=NULL)
 {
         require(RColorBrewer)
+        require(gplots)
+        #### Libraries and data
+        # require(hdp, lib.loc="src/lib/OSX/") ### This is the package that Nicola Roberts developed to extract mutation signatures - you can find it here https://github.com/nicolaroberts/hdp/tree/master
+        require(hdp)
+        # The following works with HDP version:
+
+
+        # dat <- as.matrix(dat.binary)
+        # out.dir <- "./results/clustering"
+        # cache <- F
+        # graphs <- F
+        # fast <- T
+        # grouping <- NULL
+        # col.colors <- NULL
+        # legend.info <- NULL
+
+
         system(paste0("mkdir -p ", out.dir,"/cache/"))
 
         print("Running HDP may take some time ...")
@@ -22,11 +39,6 @@ run_HDP <- function(dat,
                                                   return(grouping$groups[[n]][ grouping$groups[[n]] %in% colnames(dat)])
                                           })
         }
-
-        #### Libraries and data
-        # require(hdp, lib.loc="src/lib/OSX/") ### This is the package that Nicola Roberts developed to extract mutation signatures - you can find it here https://github.com/nicolaroberts/hdp/tree/master
-        require(hdp)
-        # The following works with HDP version:
 
         #DPrun, cache=TRUE, cache.lazy=FALSE
 
@@ -94,6 +106,7 @@ run_HDP <- function(dat,
         #posteriorMerged, cache=TRUE
         # posteriorMerged <- hdp_extract_signatures(output, prop.explained=0.99, cos.merge=0.99)
 
+
         if (!cache)
         {
                 print("Merging posterior distribution ...")
@@ -115,8 +128,6 @@ run_HDP <- function(dat,
         # Find HDP classes
         ###################
         distn <- comp_dp_distn(posteriorMerged)$mean[-1,]
-
-
 
 
         HDP.class <- sapply(1:nrow(distn), function(n)
@@ -151,7 +162,7 @@ run_HDP <- function(dat,
                 cols <- gg_color_hue(n.HDP)
         } else
         {
-                cols <- brewer.pal(n.HDP,"Set3")
+                cols <- brewer.pal(max(n.HDP,3),"Set3")[1:n.HDP]
         }
 
 
@@ -240,7 +251,7 @@ run_HDP <- function(dat,
 
                 if (is.null(grouping))
                 {
-                        source("./src/lib/R/plot/heatmap/heatmap.3.R")
+                        source("./lib/R/plot/heatmap/heatmap.3.R")
                         pdf(paste0(out.dir,'/HDP.pdf'))
                         heatmap.3(t(dat[final.order,]), scale='none', Rowv=NULL, Colv=NULL, dendrogram="none", 
                                   ColSideColors= t(colors.final[,final.order,drop=F]), trace="none", labCol=NA ,
