@@ -28,11 +28,19 @@ interaction_three_way <- function (n_tot, n1, n2, n3, observed.val=NULL, bootstr
 
         if is.null(observed.val)
         {
-                return(list(test= NULL     ,   infos=list(mean=mean(three_way.bootstrap), median=median(three_way.bootstrap), low95= CI.95[1], upp95=CI.95[2])))
+                return(list(test= NULL     ,   
+                            infos=list(mean=mean(three_way.bootstrap), 
+                                       median=median(three_way.bootstrap), 
+                                       low95= CI.95[1], 
+                                       upp95=CI.95[2])))
         } else
         {
                 test <- (observed.val > CI.95[2])|(observed.val < CI.95[1])
-                return(list(test= test     ,   infos=list(mean=mean(three_way.bootstrap), median=median(three_way.bootstrap), low95= CI.95[1], upp95=CI.95[2])))
+                return(list(test= test     ,   
+                            infos=list(mean=mean(three_way.bootstrap), 
+                                       median=median(three_way.bootstrap), 
+                                       low95= CI.95[1], 
+                                       upp95=CI.95[2])))
         }
 
 

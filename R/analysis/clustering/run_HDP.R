@@ -10,14 +10,6 @@ run_HDP <- function(dat,
         require(RColorBrewer)
         system(paste0("mkdir -p ", out.dir,"/cache/"))
 
-        # dat <- out.merge$dat
-        # # out.dir <- "results/clustering/MPN_TGS"
-        # out.dir <- "results/clustering/AML_noZRSR2"
-        # cache <- T
-        # fast <- T
-        # graphs <- T
-        # grouping <- NULL
-
         print("Running HDP may take some time ...")
 
         ### Grouping format
@@ -32,7 +24,9 @@ run_HDP <- function(dat,
         }
 
         #### Libraries and data
-        require(hdp, lib.loc="src/lib/OSX/") ### This is the package that Nicola Roberts developed to extract mutation signatures - you can find it here https://github.com/nicolaroberts/hdp/tree/master
+        # require(hdp, lib.loc="src/lib/OSX/") ### This is the package that Nicola Roberts developed to extract mutation signatures - you can find it here https://github.com/nicolaroberts/hdp/tree/master
+        require(hdp)
+        # The following works with HDP version:
 
         #DPrun, cache=TRUE, cache.lazy=FALSE
 
@@ -153,7 +147,7 @@ run_HDP <- function(dat,
 
         if (n.HDP>12)
         {
-                source("./src/lib/plot/gg_color_hue.R")
+                source("./src/lib/R/plot/misc/gg_color_hue.R")
                 cols <- gg_color_hue(n.HDP)
         } else
         {
@@ -166,8 +160,6 @@ run_HDP <- function(dat,
         {
                 #sig.title <- paste0("Signature HDP ", 2:(n.HDP))
 
-                # if (is.null(grouping))
-                # {
 
                         # Signature associated with each class
                         #pdf(paste0('results/', out.dir,'/signatures.pdf'), width=16, height=9)
@@ -175,16 +167,6 @@ run_HDP <- function(dat,
                         # plot_comp_distn(posteriorMerged, cat_names=colnames(dat), plot_title=sig.title, col="skyblue3", col_nonsig="black")
                         plot_comp_distn(posteriorMerged, cat_names=colnames(dat), col="skyblue3", col_nonsig="black")
                         dev.off()
-
-
-
-                # } else
-                # {
-                #         #pdf(paste0('results/', out.dir,'/signatures.pdf'), width=16, height=9)
-                #         pdf(paste0(out.dir,'/signatures.pdf'), width=16, height=9)
-                #         plot_comp_distn(posteriorMerged, cat_names=colnames(dat), plot_title=sig.title, col=colors.feature_type, col_nonsig="black", grouping=factor(grouping))
-                #         dev.off()
-                # }
 
                 #par(mfrow=c(ceiling(n.components/2 ),2), mar=c(3, 2, 2, 1))
                 #plot_comp_distn(posteriorMerged, cat_names=colnames(dat), col="skyblue3", col_nonsig="grey70")
@@ -258,7 +240,7 @@ run_HDP <- function(dat,
 
                 if (is.null(grouping))
                 {
-                        source("./src/lib/plot/heatmap.3.R")
+                        source("./src/lib/R/plot/heatmap/heatmap.3.R")
                         pdf(paste0(out.dir,'/HDP.pdf'))
                         heatmap.3(t(dat[final.order,]), scale='none', Rowv=NULL, Colv=NULL, dendrogram="none", 
                                   ColSideColors= t(colors.final[,final.order,drop=F]), trace="none", labCol=NA ,
@@ -286,7 +268,7 @@ run_HDP <- function(dat,
 
                         features.size <- sapply(grouping$groups,length)
 
-                        source("./src/lib/plot/heatmap.4.R")
+                        source("./src/lib/R/plot/heatmap/heatmap.4.R")
                         pdf(paste0(out.dir,'/HDP_grouping.pdf'))
                         heatmap.4(t(dat[final.order,grouping$features]), scale='none', Rowv=NULL, Colv=NULL, dendrogram="none", 
                                   ColSideColors= t(colors.final[,final.order,drop=F]), trace="none", labCol=NA ,

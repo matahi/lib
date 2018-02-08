@@ -17,9 +17,10 @@ blank_theme <- theme_minimal()+
 # function pie_chart
 pie_chart <-  function(dat.df, feature.freq, feature.facet, num_col=NA)
 {
-        # dat.df <-  Nmut.df
-        # feature.freq <- "NMut"
-        # feature.facet <- "panel"
+        dat.df <- dat.df %>% as.data.frame()
+        # feature.freq <- "n.ALL"
+        # feature.facet <- "new_DISEASE"
+
         if (is.na(num_col))
                 num_col <- length(unique(dat.df[,feature.facet]))
 
