@@ -1,4 +1,4 @@
-league_model <- function (chronology.df, n.repeat=1000, win=2, tie=1, loss=0, cutoff.occurrence=5, add.bars=T, list.genes=NULL) {
+league_model <- function (chronology.df, n.repeat=1000, win=2, tie=1, loss=0, cutoff.occurrence=5, add.bars=T, group.genes=NULL) {
 
         # tmp <- chronology.df
 
@@ -21,15 +21,15 @@ league_model <- function (chronology.df, n.repeat=1000, win=2, tie=1, loss=0, cu
                              {
                                      chronology.gene <- chronology.df.full[chronology.df.full$Gene1==genes[k],]
 
-                                     if (any(chronology.gene$total <= cutoff.occurrence))
-                                             chronology.gene[ chronology.gene$total <= cutoff.occurrence,c("total", "Win","Loss","Inconclusive")] <- c(9,3,3,3 )
+                                     if (any(chronology.gene$Total <= cutoff.occurrence))
+                                             chronology.gene[ chronology.gene$Total <= cutoff.occurrence,c("Total", "Win","Loss","Inconclusive")] <- c(9,3,3,3 )
 
 
                                      score.matrix <- sapply(1:nrow(chronology.gene), function(j)
                                                             {
-                                                                    prob.win <- chronology.gene$Win[j]/chronology.gene$total[j]
-                                                                    prob.loss <- chronology.gene$Loss[j]/chronology.gene$total[j]
-                                                                    prob.tie <- chronology.gene$Inconclusive[j]/chronology.gene$total[j]
+                                                                    prob.win <- chronology.gene$Win[j]/chronology.gene$Total[j]
+                                                                    prob.loss <- chronology.gene$Loss[j]/chronology.gene$Total[j]
+                                                                    prob.tie <- chronology.gene$Inconclusive[j]/chronology.gene$Total[j]
 
                                                                     return(sample(c(win,tie,loss), size=n.repeat, replace=TRUE, prob=c(prob.win,prob.tie, prob.loss)))
                                                             })
@@ -76,10 +76,10 @@ league_model <- function (chronology.df, n.repeat=1000, win=2, tie=1, loss=0, cu
       # text.info <- ifelse(levels(gene.m$variable) %in% list.genes, "bold", "plain")
       # pp <- pp + theme(axis.text.y=element_text(face=text.info))
 
-      if (!is.null(list.genes))
+      if (!is.null(group.genes))
       {
-              text.color <- ifelse(levels(gene.m$variable) %in% list.genes, "#2c7bb6", "black")
-              pp <- pp + theme(axis.text.y=element_text(color=text.color))
+              cols.axis <- group.genes$colours[ match(levels(gene.m$variable), group.genes$alterations )] 
+              pp <- pp + theme(axis.text.y=element_text(color=cols.axis))
       }
 
 

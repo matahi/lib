@@ -3,7 +3,7 @@ plot_precedence <- function(chronology.df, gene.list, Reordering=NULL)
         cutoff.occurrence <- 20
         # TODO: PUT RANDOM IF total < 5
 
-        gene.list <- targets
+        # gene.list <- targets
         # Ratio wins/losses
         Ratio.win <- sapply(1:nrow(chronology.df), function(k)
                             {

@@ -71,14 +71,14 @@ analyze_chronology <- function(dat.genetics, mutation.df, cutoff.occurrence, out
 
                                                                    mutation.df.sample <- mutation.df[(mutation.df$SampleName==samples.Gene1_2[k]),]
 
-                                                                   pdf(paste0("results/", out.dir, "/", Gene1,"_",Gene2, "_",out,"_",samples.Gene1_2[k],".pdf"))
-                                                                   print(
-                                                                         ggplot(mutation.df.sample) + geom_point(aes(x=Gene, y=VAF.corr, colour=(Gene %in% c(Gene1,Gene2))),size=5) + ylim(0,1) + 
-                                                                         geom_segment(aes(x=Gene, xend=Gene, y=LCI.corr, yend=UCI.corr, colour=(Gene %in% c(Gene1,Gene2)))) + theme_bw() +
-                                                                         theme(legend.position="none")
-                                                                         #scale_colour_manual(values=col.gene) + theme(legend.position="none")
-                                                                         )
-                                                                   dev.off()
+                                                                   # pdf(paste0("results/", out.dir, "/", Gene1,"_",Gene2, "_",out,"_",samples.Gene1_2[k],".pdf"))
+                                                                   # print(
+                                                                   #       ggplot(mutation.df.sample) + geom_point(aes(x=Gene, y=VAF.corr, colour=(Gene %in% c(Gene1,Gene2))),size=5) + ylim(0,1) + 
+                                                                   #       geom_segment(aes(x=Gene, xend=Gene, y=LCI.corr, yend=UCI.corr, colour=(Gene %in% c(Gene1,Gene2)))) + theme_bw() +
+                                                                   #       theme(legend.position="none")
+                                                                   #       #scale_colour_manual(values=col.gene) + theme(legend.position="none")
+                                                                   #       )
+                                                                   # dev.off()
 
                                                                    return(out)
                                                            })

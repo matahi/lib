@@ -1,8 +1,9 @@
 analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
 {
+        require(tidyverse)
         # Samples 
-        samples.Gene1_2 <- as.character(rownames(dat.binary)[intersect(which(dat.binary[,Gene1]==1),which(dat.binary[,Gene2]==1))])
-
+        # samples.Gene1_2 <- as.character(rownames(dat.binary)[intersect(which(dat.binary[,Gene1]==1),which(dat.binary[,Gene2]==1))])
+        samples.Gene1_2 <- dat.binary %>% filter(dat.binary[[Gene1]]==1,dat.binary[[Gene2]]==1) %>% .$ID
 
         if (length(samples.Gene1_2)==0)
                 return(NULL)
@@ -10,65 +11,8 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
         # What happens if 2 mutations?
         order.info <- sapply(1:length(samples.Gene1_2), function(k)
                              {
-                                     dat.Gene1 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$Gene==Gene1),]
-                                     dat.Gene2 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$Gene==Gene2),]
-
-                                     #### Exceptions
-                                     if (Gene1=="IDH2_R140")
-                                     {
-                                             dat.Gene1 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="IDH2_140"),]
-                                     }
-
-                                     if (Gene2=="IDH2_R140")
-                                     {
-                                             dat.Gene2 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="IDH2_140"),]
-                                     }
-
-                                     if (Gene1=="IDH2_R172")
-                                     {
-                                             dat.Gene1 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="IDH2_172"),]
-                                     }
-
-                                     if (Gene2=="IDH2_R172")
-                                     {
-                                             dat.Gene2 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="IDH2_172"),]
-                                     }
-
-                                     if (Gene1=="FLT3_ITD")
-                                     {
-                                             dat.Gene1 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="FLT3_ITD"),]
-                                     }
-
-                                     if (Gene2=="FLT3_ITD")
-                                     {
-                                             dat.Gene2 <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k])&(dat.genetics$PROTEIN_VARIANT=="FLT3_ITD"),]
-                                     }
-
-                                     if (Gene1=="FLT3_TKD")
-                                     {
-                                             dat.sample <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k]),]
-                                             pos.info <- sapply(1:nrow(dat.sample), function(n)
-                                                                {
-                                                                        PROTEIN_NUM <- strsplit(dat.sample$PROTEIN_CHANGE[n],"[^0-9]+")[[1]][2]
-                                                                        as.numeric(PROTEIN_NUM)
-                                                                })
-
-                                             FLT3_TKD.samples <- which((dat.sample$Gene=="FLT3")&(pos.info > 800)&(pos.info <860))
-                                             dat.Gene1 <- dat.sample[FLT3_TKD.samples,]
-                                     }
-
-                                     if (Gene2=="FLT3_TKD")
-                                     {
-                                             dat.sample <- dat.genetics[(dat.genetics$ID==samples.Gene1_2[k]),]
-                                             pos.info <- sapply(1:nrow(dat.sample), function(n)
-                                                                {
-                                                                        PROTEIN_NUM <- strsplit(dat.sample$PROTEIN_CHANGE[n],"[^0-9]+")[[1]][2]
-                                                                        as.numeric(PROTEIN_NUM)
-                                                                })
-
-                                             FLT3_TKD.samples <- which((dat.sample$Gene=="FLT3")&(pos.info > 800)&(pos.info <860))
-                                             dat.Gene2 <- dat.sample[FLT3_TKD.samples,]
-                                     }
+                                     dat.Gene1 <- dat.genetics %>% filter(ID == samples.Gene1_2[k], variable == Gene1) 
+                                     dat.Gene2 <- dat.genetics %>% filter(ID == samples.Gene1_2[k], variable == Gene2) 
 
                                      ######
                                      if (nrow(dat.Gene1)==0|nrow(dat.Gene2)==0)
@@ -77,7 +21,7 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
                                              return("inconclusive")
                                      } else 
                                      {
-                                             dat.sample <- dat.genetics[dat.genetics$ID==samples.Gene1_2[k],]
+                                             dat.sample <- dat.genetics %>% filter(ID == samples.Gene1_2[k])
 
                                              Gene1.max <- dat.Gene1[which.max(dat.Gene1$VAF),]
                                              Gene2.max <- dat.Gene2[which.max(dat.Gene2$VAF),]
@@ -115,6 +59,9 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
         return(order.info)
 
 }
+
+
+
 
 
 #         for(s in clinicalData$PDID)

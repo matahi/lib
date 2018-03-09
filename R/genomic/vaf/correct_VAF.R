@@ -8,12 +8,11 @@ correct_VAF <- function(dat.genetics, gender ,CN.effect=data.frame())
 {
         out <- Reduce("rbind", lapply(1:nrow(dat.genetics), function(n)
                                       {
-                                              # print(n)
                                               Sample <- as.character(dat.genetics[n,"ID"])
-                                              VAF <- dat.genetics[n,"VAF"]
+                                              VAF <- dat.genetics$VAF[n]
                                               Gene <- as.character(dat.genetics[n,"Gene"])
                                               Chr <- as.character(dat.genetics[n,"Chr"])
-                                              Ntot <- dat.genetics[n,"TotRead"]
+                                              Ntot <- dat.genetics$TotRead[n]
                                               Nmut <- round(VAF*Ntot)
 
                                               # 1=Male

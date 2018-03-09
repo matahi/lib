@@ -13,20 +13,22 @@ plot_comutation <- function(dat.integrate,
         # TESTING
         ########################
 
-        # dat.binary <- dat.final %>% filter(DISEASE == "AML") %>% select(4:ncol(dat.final))
-        # dat.binary[is.na(dat.binary)] <- 0
-        # dat.binary[dat.binary>1] <- 1
-
-        # dat.integrate <- as.matrix(dat.binary)
-        # out.dir <- "results/"
+        # dat.integrate <- as.matrix(dat.binary.final)
         # cache <- F
-        # Reordering <- NULL
         # logOR.limits <- c(-3,3)
         # pair.range <- c(-1,0,5,10,20,50,100,200)
 
+        # Reordering <- NULL
+        # Reordering is a df with 3 columns:
+        # - alterations
+        # - groups
+        # - colours
+
+        # Reordering <- Reordering.CH_SP
+
         ## Reorder dat.integrate
         if (!is.null(Reordering))
-                dat.integrate <- dat.integrate %>% mutate( variable = factor(variable, levels=Reordering$order))
+                dat.integrate <- dat.integrate[,levels(Reordering$alterations)[levels(Reordering$alterations) %in% colnames(dat.integrate)]]
 
         ########################
         # TESTING default values
@@ -96,7 +98,7 @@ plot_comutation <- function(dat.integrate,
                 order.variables <- levels(PInt.m$Var1)
         } else
         {
-                order.variables <- Reordering
+                order.variables <- levels(Reordering$alterations)
         }
 
         ## Working on range
@@ -155,9 +157,9 @@ plot_comutation <- function(dat.integrate,
 
         ## Plot
         pp <- ggplot() + 
-                geom_tile(data=pairs.upper, aes(x=Var1, y=Var2, fill=value), colour="white", show.legend=F) +
+                geom_raster(data=pairs.upper, aes(x=Var1, y=Var2, fill=value), colour="white", show.legend=F) +
                 geom_point(data=pairs.upper, aes(x=NA, y=NA, color=value)) + # dummy plots for legend purposes
-                geom_tile(data=logOdds.lower, aes(x=Var1, y=Var2, fill=value), colour="white", show.legend=F) +
+                geom_raster(data=logOdds.lower, aes(x=Var1, y=Var2, fill=value), colour="white", show.legend=F) +
                 geom_point(data=logOdds.lower, aes(x=NA, y=NA, alpha=value)) + # dummy plots for legend purposes
                 geom_point(data=PInt.lower %>% filter(adj.pval <= 0.05), aes(x=Var1, y=Var2), shape=8, colour="salmon", show.legend=F) +
                 geom_point(data=PInt.lower , aes(x=NA, y=NA, shape="P < 0.05")) + # dummy plots for legend purposes
@@ -174,6 +176,16 @@ plot_comutation <- function(dat.integrate,
                                             override.aes = list(shape = 8, size = 3, color = "salmon"))) +
                 theme(legend.key = element_rect(fill = "white") )
 
+      if (!is.null(Reordering))
+      {
+              cols.axis <- Reordering$colours[ match(order.variables, Reordering$alterations )] 
+              features.sep <- Reordering %>% count(groups) %>% mutate(pos = cumsum(n)) %>% slice(1:(n()-1))
+              pp <- pp +
+                geom_hline(data= features.sep, aes(yintercept=pos+0.5), col="black") + # features separation
+                geom_vline(data= features.sep, aes(xintercept=pos+0.5), col="black") + # features separation
+                theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, colour= cols.axis),
+                      axis.text.y = element_text(colour= cols.axis))
+      }
 
         return(pp)
 
