@@ -1,29 +1,28 @@
-league_model <- function (chronology.df, n.repeat=1000, win=2, tie=1, loss=0, cutoff.occurrence=5, add.bars=T, group.genes=NULL) {
+league_model <- function (chronology.df, n.repeat=1000, type="score", win=2, tie=1, loss=0, cutoff.occurrence=5, add.bars=T, group.genes=NULL) {
 
-        # tmp <- chronology.df
+        # cutoff.occurrence <- 5
+        # n.repeat <- 1000
+        # win <- 2
+        # tie <- 1
+        # loss <- 0
+        # add.bars <- T
+        # group.genes <- Reordering.features
 
-        # chronology.df <- chronology.df[-which(chronology.df$Gene1 %in% c("MLL_PTD", "FLT3_ITD", "t_15_17")),]
-        # chronology.df <- chronology.df[-which(chronology.df$Gene2 %in% c("MLL_PTD", "FLT3_ITD", "t_15_17")),]
-
-        ###
-        chronology.df.reverse <- chronology.df
-        chronology.df.reverse$Win <- chronology.df$Loss
-        chronology.df.reverse$Loss <- chronology.df$Win
-        chronology.df.reverse$Gene1 <- chronology.df$Gene2
-        chronology.df.reverse$Gene2 <- chronology.df$Gene1
-        chronology.df.full <- rbind(chronology.df, chronology.df.reverse)
+        require(tidyverse)
 
         ###
-        genes <- as.character(unique(chronology.df.full$Gene1))
+        genes <- unique(chronology.df$Gene1)
+
+        ###
+        precedence.df <- chronology.df %>% filter(Gene1 != Gene2)
 
         ###
         score.gene <- sapply(1:length(genes), function(k)
                              {
-                                     chronology.gene <- chronology.df.full[chronology.df.full$Gene1==genes[k],]
+                                     chronology.gene <- precedence.df[precedence.df$Gene1==genes[k],]
 
                                      if (any(chronology.gene$Total <= cutoff.occurrence))
-                                             chronology.gene[ chronology.gene$Total <= cutoff.occurrence,c("Total", "Win","Loss","Inconclusive")] <- c(9,3,3,3 )
-
+                                             chronology.gene[ chronology.gene$Total <= cutoff.occurrence,c("Total", "Win","Loss","Inconclusive")] <- c(9,3,3,3)
 
                                      score.matrix <- sapply(1:nrow(chronology.gene), function(j)
                                                             {
@@ -45,44 +44,54 @@ league_model <- function (chronology.df, n.repeat=1000, win=2, tie=1, loss=0, cu
         dummy.mean <- -mean(dummy.score)
         dummy.sd <- sd(dummy.score)
 
-
-        # invert rank
+        # # invert rank
+        # if (type == "rank")
+        # {
         # score.rank <- t(apply(score.gene,1, function(x){length(genes)-rank(x, ties="random")+1}))
         # colnames(score.rank) <- genes
+        # }
         # score.rank <- data.frame(score.rank)
         #mean.rank <- apply(score.rank,2,mean)
 
         colnames(score.gene) <- genes
-        score.gene <- -data.frame(score.gene) ## Opposite of score
+        score.gene <- -data.frame(score.gene) %>% tbl_df() ## Opposite of score
         mean.score <- apply(score.gene,2,mean)
 
-        library(reshape2)
+        score.df <- gather(score.gene,
+                           key = "alteration",
+                           value = "score")
 
         gene.m <- melt(score.gene)
         gene.m$variable <- factor(gene.m$variable, levels=genes[order(mean.score,decreasing=T)])
+
+        score.df <- score.df %>%
+                mutate(alteration = factor(alteration, levels = names(mean.score)[order(mean.score, decreasing=T)]))
+
         source("./src/lib/R/plot/misc/data_summary.R")
 
-        pp <- ggplot(gene.m, aes(x=variable,y=value)) + stat_summary(fun.data=data_summary) + xlab("")+ylab("relative order") + coord_flip() +
-              theme_bw() + theme(text= element_text(size=25), axis.text.x=element_blank(), axis.ticks=element_blank(), legend.text= element_text(size=20), panel.grid=element_blank()) 
+        pp <- ggplot(score.df, aes(x=alteration,y=score)) +
+                stat_summary(fun.data=data_summary) +
+                xlab("") +
+                ylab("relative order") +
+                coord_flip() +
+                theme(axis.text.x = element_blank(),
+                      axis.ticks = element_blank(),
+                      legend.text = element_text(size=20),
+                      panel.grid = element_blank())
 
       if (add.bars)
-              pp <- pp +geom_hline(aes(yintercept=dummy.mean - dummy.sd), linetype="longdash") + geom_hline(aes(yintercept=dummy.mean + dummy.sd), linetype="longdash")
-
-      ###
-      # add colors to x axis
-      ###
-      ### text.info <- element_text(face = c("bold","plain"), color="black", size=16)
-
-      # text.info <- ifelse(levels(gene.m$variable) %in% list.genes, "bold", "plain")
-      # pp <- pp + theme(axis.text.y=element_text(face=text.info))
+              pp <- pp +
+                      geom_hline(aes(yintercept=dummy.mean - dummy.sd), linetype="longdash") + 
+                      geom_hline(aes(yintercept=dummy.mean + dummy.sd), linetype="longdash")
 
       if (!is.null(group.genes))
       {
-              cols.axis <- group.genes$colours[ match(levels(gene.m$variable), group.genes$alterations )] 
+              cols.axis <- group.genes$colours[ match(levels(score.df$alteration), group.genes$alterations )] 
               pp <- pp + theme(axis.text.y=element_text(color=cols.axis))
       }
 
-
       ###
-      return(pp)
+      league.out <- list(ranking = score.df, p = pp)
+
+      return(league.out)
 }

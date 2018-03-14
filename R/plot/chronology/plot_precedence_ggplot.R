@@ -1,5 +1,4 @@
 plot_precedence <- function(chronology.df,
-                            out.dir="results/", 
                             total.range = c(-1,0,5,10,20,50,100,200),
                             Reordering=NULL)
 {
@@ -11,11 +10,6 @@ plot_precedence <- function(chronology.df,
         # TESTING
         ########################
 
-        # dat.integrate <- as.matrix(dat.binary.final)
-        # cache <- F
-        # logOR.limits <- c(-3,3)
-        # pair.range <- c(-1,0,5,10,20,50,100,200)
-
         # Reordering <- NULL
         # Reordering is a df with 3 columns:
         # - alterations
@@ -24,37 +18,30 @@ plot_precedence <- function(chronology.df,
 
         # Reordering <- Reordering.CH_SP
 
-        ## Reorder dat.integrate
+        ## Gene ordering
         if (!is.null(Reordering))
-                dat.integrate <- dat.integrate[,levels(Reordering$alterations)[levels(Reordering$alterations) %in% colnames(dat.integrate)]]
+        {
+                Gene.levels <- levels(Reordering$alterations)[levels(Reordering$alterations) %in% unique(chronology.df$Gene1)]
+        } else
+        {
+                Gene.levels <- unique(chronology.df$Gene1)
+        }
 
-        ########################
-        # TESTING default values
-        ########################
-        # TODO: Verify if logOR.limits are integer values
-
-        # TODO: Work on pair.range
-
-        # TODO: Work on Reordering/Grouping
-
-
-        ########################
-        # CALCULATING OR/Pvals/Pairs
-        ########################
-
-        Gene.levels <- unique(union(precedence.df$Gene1, precedence.df$Gene2))
-
+        #
         precedence.df <- chronology.df %>% 
                 mutate(
                        Gene1 = factor(Gene1, levels=Gene.levels),
                        Gene2 = factor(Gene2, levels=Gene.levels),
                        Ratio.win = ifelse(Win + Loss > 0, Win / (Win + Loss), NA),
-                       Ratio.inconclusive = ifelse( Total > 0 , (Win + Loss) / Total, NA))
+                       Ratio.inconclusive = ifelse( Total > 0 , 1 - (Win + Loss) / Total, NA))
 
-        if (!is.null(Reordering))
-                precedence.df <- precedence.df %>%
-                        mutate(Gene1 = factor(Gene1, levels=levels(Reordering$alterations)),
-                               Gene2 = factor(Gene2, levels=levels(Reordering$alterations)))
+        ########################
+        # TODO: TESTING default values
+        ########################
+
+        ########################
+        # CALCULATING OR/Pvals/Pairs
+        ########################
 
         # ###
         # logPInt 
@@ -74,14 +61,6 @@ plot_precedence <- function(chronology.df,
         Ratio.win.df <- precedence.df %>% select(Gene1,Gene2,Ratio.win)
         Total.df <- precedence.df %>% select(Gene1,Gene2,Total)
 
-        if (is.null(Reordering))
-        {
-                order.variables <- levels(PInt.m$Var1)
-        } else
-        {
-                order.variables <- levels(Reordering$alterations)
-        }
-
         ## Working on range
         # i. Breaks for Total 
         # TODO: improve total range and labelling
@@ -96,14 +75,13 @@ plot_precedence <- function(chronology.df,
 
         ## Formatting data.frames
         Total.upper <- Total.df %>% 
+                filter(as.numeric(Gene1) > as.numeric(Gene2)) %>%
+                #filter(as.numeric(Gene1) >= as.numeric(Gene2)) %>%
                 mutate(
-                       Gene2_bis=Gene1,
-                       value=cut(Total, label=Total.labels, breaks=total.range)) %>%
-                mutate(Gene1=Gene2,
-                       Gene2=Gene2_bis) %>%
-                select(Gene1,Gene2,value)
+                       value=cut(Total, label=Total.labels, breaks=total.range))
 
         Ratio.win.lower <- Ratio.win.df %>% 
+                filter(as.numeric(Gene1) < as.numeric(Gene2)) %>%
                 mutate(
                        value=cut(Ratio.win, breaks = ratio.breaks, label= ratio.labels, include.lowest=TRUE))
 
@@ -123,9 +101,9 @@ plot_precedence <- function(chronology.df,
 
         ## Plot
         pp <- ggplot() + 
-                geom_raster(data=Total.upper, aes(x=Gene1, y=Gene2, fill=value), colour="white", show.legend=F) +
+                geom_tile(data=Total.upper, aes(x=Gene1, y=Gene2, fill=value), colour="white", show.legend=F) +
                 geom_point(data=Total.upper, aes(x=NA, y=NA, color=value)) + # dummy plots for legend purposes
-                geom_raster(data=Ratio.win.lower, aes(x=Gene1, y=Gene2, fill=value), colour="white", show.legend=F) +
+                geom_tile(data=Ratio.win.lower, aes(x=Gene1, y=Gene2, fill=value), colour="white", show.legend=F) +
                 geom_point(data=Ratio.win.lower, aes(x=NA, y=NA, alpha=value)) + # dummy plots for legend purposes
                 scale_fill_manual(values=c(colors.Total, colors.ratio), na.value="grey50") + 
                 scale_x_discrete(limits=Gene.levels) +
@@ -142,7 +120,7 @@ plot_precedence <- function(chronology.df,
 
       if (!is.null(Reordering))
       {
-              cols.axis <- Reordering$colours[ match(order.variables, Reordering$alterations )] 
+              cols.axis <- Reordering$colours[ match(Gene.levels, Reordering$alterations )] 
               features.sep <- Reordering %>% count(groups) %>% mutate(pos = cumsum(n)) %>% slice(1:(n()-1))
               pp <- pp +
                 geom_hline(data= features.sep, aes(yintercept=pos+0.5), col="black") + # features separation

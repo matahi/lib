@@ -20,9 +20,7 @@ correct_VAF <- function(dat.genetics, gender ,CN.effect=data.frame())
                                               Gender <- gender[n]
 
                                               if (is.na(Gender))
-                                              {
-                                                      Gender <- 2 
-                                              }
+                                                      Gender <- 1 # majority vote
 
                                               # 1- calculate_VAF_95CI
                                               if (is.na(Ntot))
@@ -35,7 +33,7 @@ correct_VAF <- function(dat.genetics, gender ,CN.effect=data.frame())
                                                       VAF_95_CI_upp <- calculate_VAF_95CI(Nmut,Ntot)[2]
                                               }
 
-                                              if (Chr=="X"&Gender==1) # if chr is X and male sample same as deletion
+                                              if (Chr=="chrX"&Gender==1) # if chr is X and male sample same as deletion
                                               {
                                                       VAF.corrected <- VAF/2
                                                       correction <- "chr_X"
@@ -43,7 +41,7 @@ correct_VAF <- function(dat.genetics, gender ,CN.effect=data.frame())
                                                       # Similar case as deletion
                                                       new_LCI <- calculate_VAF_95CI(Nmut,2*Ntot)[1]
                                                       new_UCI <- calculate_VAF_95CI(Nmut,2*Ntot)[2]
-                                              } else if (Chr=="Y") # if chr is Y only one copy
+                                              } else if (Chr=="chrY") # if chr is Y only one copy
                                               {
                                                       VAF.corrected <- VAF/2
                                                       correction <- "chr_Y"

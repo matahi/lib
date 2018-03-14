@@ -22,39 +22,8 @@ analyze_clonality <- function(dat.binary, dat.genetics, gene)
                                  {
                                          # subset the genetics df to the sample
                                          dat.sample <- dat.genetics[(dat.genetics$ID == Gene.samples[k]),]
-                                         dat.sample.gene <- dat.genetics[(dat.genetics$ID == Gene.samples[k])&(dat.genetics$Gene==gene),]
-                                         dat.sample.other <- dat.genetics[(dat.genetics$ID == Gene.samples[k])&(dat.genetics$Gene!=gene),]
-
-                                         if (gene=="IDH2_R140")
-                                         {
-                                                 dat.sample.gene <- dat.genetics[(dat.genetics$ID==Gene.samples[k])&(dat.genetics$PROTEIN_VARIANT=="IDH2_140"),]
-                                                 dat.sample.other <- dat.genetics[(dat.genetics$ID==Gene.samples[k])&(dat.genetics$PROTEIN_VARIANT!="IDH2_140"),]
-                                         }
-
-                                         if (gene=="IDH2_R172")
-                                         {
-                                                 dat.sample.gene <- dat.genetics[(dat.genetics$ID==Gene.samples[k])&(dat.genetics$PROTEIN_VARIANT=="IDH2_172"),]
-                                                 dat.sample.other <- dat.genetics[(dat.genetics$ID==Gene.samples[k])&(dat.genetics$PROTEIN_VARIANT!="IDH2_172"),]
-                                         }
-
-                                         if (gene=="FLT3_ITD")
-                                         {
-                                                 dat.sample.gene <- dat.genetics[(dat.genetics$ID==Gene.samples[k])&(dat.genetics$PROTEIN_VARIANT=="FLT3_ITD"),]
-                                                 dat.sample.other <- dat.genetics[(dat.genetics$ID==Gene.samples[k])&(dat.genetics$PROTEIN_VARIANT!="FLT3_ITD"),]
-                                         }
-
-                                         if (gene=="FLT3_TKD")
-                                         {
-                                                 pos.info <- sapply(1:nrow(dat.sample), function(n)
-                                                                    {
-                                                                            PROTEIN_NUM <- strsplit(dat.sample$PROTEIN_CHANGE[n],"[^0-9]+")[[1]][2]
-                                                                            as.numeric(PROTEIN_NUM)
-                                                                    })
-
-                                                 FLT3_TKD.samples <- which((dat.sample$Gene=="FLT3")&(pos.info > 800)&(pos.info <860))
-                                                 dat.sample.gene <- dat.sample[FLT3_TKD.samples,]
-                                                 dat.sample.other <- dat.sample[-FLT3_TKD.samples,]
-                                         }
+                                         dat.sample.gene <- dat.genetics[(dat.genetics$ID == Gene.samples[k])&(dat.genetics$variable==gene),]
+                                         dat.sample.other <- dat.genetics[(dat.genetics$ID == Gene.samples[k])&(dat.genetics$variable!=gene),]
 
                                          ###
                                          # Assess clonality
@@ -65,7 +34,7 @@ analyze_clonality <- function(dat.binary, dat.genetics, gene)
                                                  return("clonal")
 
                                          #
-                                         Gene.max <- dat.sample.gene[which.max(dat.sample.gene$VAF),]
+                                         Gene.max <- dat.sample.gene[which.max(dat.sample.gene$VAF.corr),] #
 
                                          comparison <- sapply(1:nrow(dat.sample.other), function(j)
                                                               {

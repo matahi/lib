@@ -2,7 +2,6 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
 {
         require(tidyverse)
         # Samples 
-        # samples.Gene1_2 <- as.character(rownames(dat.binary)[intersect(which(dat.binary[,Gene1]==1),which(dat.binary[,Gene2]==1))])
         samples.Gene1_2 <- dat.binary %>% filter(dat.binary[[Gene1]]==1,dat.binary[[Gene2]]==1) %>% .$ID
 
         if (length(samples.Gene1_2)==0)
