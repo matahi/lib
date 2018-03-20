@@ -3,6 +3,7 @@ glm_clinical_mutation <- function(dat.survival, non_zeros, clinical.feature, n_r
         
         require(glmnet)
         require(lars)
+
         # clinical.feature <- clinical.list[n]
 
         # dat.survival <- dat.survival[-which(dat.survival$Age==0),]

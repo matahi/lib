@@ -1,5 +1,12 @@
 chronology_final <- function (dat.genetics, dat.binary) {
 
+        ###############
+        # Testing
+        # dat.genetics <- dat.genetics.final %>% filter(ID %in% HDP.ID)
+        # dat.binary <- dat.final.analysis %>% select(ID,genes.selection) %>% filter(ID %in% HDP.ID)
+        ###############
+
+        # This analysis is by pair of genes
         pairs.genes <- t(combn(setdiff(colnames(dat.binary),"ID"),2))
 
         source("./src/lib/R/genomic/chronology/analyze_chronology_bis.R")
