@@ -10,6 +10,8 @@ compare_comutation <- function (dat1, dat2, OR.range=c(0.01,100)) {
                                                           f=NA 
                                                   else f$estimate} ))
 
+                # if dat1 has only 1 row
+                odds <- matrix(odds, nrow = ncol(dat1), ncol = ncol(dat2))
 
                 # Pvals
                 logPInt <- sapply(1:ncol(dat2), 
@@ -22,6 +24,9 @@ compare_comutation <- function (dat1, dat2, OR.range=c(0.01,100)) {
                                                      else ifelse(f$estimate>1, 
                                                                  -log10(f$p.val),
                                                                  log10(f$p.val))} ))
+
+                # if dat1 has only 1 row
+                logPInt <- matrix(logPInt, nrow = ncol(dat1), ncol = ncol(dat2))
 
                 # 
                 rownames(logPInt) <- rownames(odds) <- colnames(dat1)

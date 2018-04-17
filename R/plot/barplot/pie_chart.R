@@ -87,6 +87,12 @@ pie_chart <-  function(dat.df, feature.freq, feature.facet, num_col=NA)
                 #geom_text(data=mydf[mydf$value!=0,],aes(label = percent_value, x="", y=position),color="white", size=5)
         }
 
+        if (nlevels(mydf$freq)>8)
+        {
+                source("./src/lib/R/plot/misc/gg_color_hue.R")
+                p <- p + scale_fill_manual(values = gg_color_hue(nlevels(mydf$freq)))
+        }
+
         return(list(p=p, pval=pval, mydf=mydf))
 }
 
