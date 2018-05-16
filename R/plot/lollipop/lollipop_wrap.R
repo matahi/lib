@@ -1,3 +1,54 @@
+# wrapper
+# Main function is plot_lollipop
+filter_residue <- function (residueSeq) {
+        if (any(residueSeq %in% c("OPAL", "OCHRE", "AMBER"))) {
+                stopRes <- c("OPAL", "OCHRE", "AMBER")
+                residueSeq <- residueSeq[-which(residueSeq %in% stopRes)]
+        }
+
+        return(residueSeq)
+        
+}
+
+get_protein_info <- function (gene) {
+        require(GenVisR)
+
+        # TODO Recover good version
+        ensembl <- useMart(biomart="ENSEMBL_MART_ENSEMBL", dataset= "hsapiens_gene_ensembl", ensemblRedirect = F)
+        cds.infos <- getBM(attributes=c("coding", "cds_length","ensembl_transcript_id"), filters = "hgnc_symbol", values = gene, mart= ensembl)
+
+        # Removing non available sequences
+        cds.infos <- cds.infos[!is.na(cds.infos$cds_length),]
+        # Removing sequences that are not of length /3
+        cds.infos <- cds.infos[(cds.infos$cds_length%%3==0),]
+
+        if (nrow(cds.infos)!=0)
+        {
+                # Keeping longest transcript
+                longest.transcript.list <- cds.infos$ensembl_transcript_id[(cds.infos$cds_length==max(cds.infos$cds_length))]
+                # If several keep the first one by default
+                transcript.taken <- longest.transcript.list[1] 
+                # Recover sequence
+                codingSeq <- cds.infos$coding[cds.infos$ensembl_transcript_id==transcript.taken]
+                # Transform sequence into AA
+                residueSeq <- GenVisR:::lolliplot_DNAconv(codingSeq, to = "residue")
+                # Filter out non AA codes
+                residueSeq <- filter_residue(residueSeq)
+                # Get length
+                protein_length <- length(residueSeq)
+                # Recover domains
+                protein_domain <- getBM(attributes=c("interpro_description", "interpro_start","interpro_end"), filters=c("ensembl_transcript_id"), values=transcript.taken, mart=ensembl)
+                if(all(is.na(protein_domain$interpro_description)))
+                        protein_domain <- data.frame(interpro_description=gene, interpro_start=1, interpro_end=proteinLength)
+        } else
+        {
+                return(NULL)
+        }
+
+        return(list(protein_length=protein_length,protein_domain=protein_domain))
+        
+}
+
 my_lollipop_facet <- function (dat.genetics.unique, 
                                current.gene, 
                                facet_var=NULL,
@@ -136,6 +187,7 @@ my_lollipop_facet <- function (dat.genetics.unique,
                                  return(tmp)
                              })
 
+
         p.final <- ggarrange(plotlist = p.lollipop,
                              p.protein,
                              ncol=1,
@@ -144,11 +196,37 @@ my_lollipop_facet <- function (dat.genetics.unique,
                              heights =c(rep(4, length(p.lollipop)),1.5),
                              align="v")
 
+
         if (plot.title)
                 p.final <- annotate_figure(p.final,
                                    top = text_grob(current.gene, color="black", face="bold", size=size.text))
 
         return(p.final)
 }
+
+
+plot_lollipop <- function (gene, dat.genetics, ...) {
+
+        # gene
+        # dat.genetics: VCF format with columns: Gene, PROTEIN_POS, PROTEIN_CHANGE, mutation_type (sorry for the inconsistency)
+
+        # a. Recover protein
+        prot.info <- get_protein_info(gene)
+
+        # If no protein info then we cannot plot the gene
+        if (is.null(prot.info)) 
+                stop("No protein information for that gene")
+
+        # b. plot info 
+        pp <- my_lollipop_facet(dat.genetics, 
+                                current.gene= gene, 
+                                protein_domain=prot.info$protein_domain, 
+                                protein_length=prot.info$protein_length, ...)
+
+        # c. plot
+        return(pp)
+        # plot(pp)
+}
+
 
 

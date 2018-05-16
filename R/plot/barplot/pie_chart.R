@@ -67,25 +67,27 @@ pie_chart <-  function(dat.df, feature.freq, feature.facet, num_col=NA)
         # for some reason we have to do that
         mydf$freq <- factor(mydf$freq, levels=rev(levels(mydf$freq)))
 
-        #p <- ggplot(mydf, aes(x="",y=value,fill=freq)) + geom_bar(stat="identity",width=1)  + coord_polar("y",direction=-1) + facet_wrap(~facet, ncol=4) + 
-        p <- ggplot(mydf, aes(x="",y=value,fill=freq)) + geom_bar(stat="identity",width=1)  + coord_polar("y",direction=1) + facet_wrap(~facet, ncol=num_col) + 
+        # counter clockwise
+        # p <- ggplot(mydf, aes(x="",y=value,fill=freq)) + geom_bar(stat="identity",width=1)  + coord_polar("y",direction=-1) + facet_wrap(~facet, ncol=4) + 
+
+        # Full pie_chart
+        # p <- ggplot(mydf, aes(x="",y=value,fill=freq)) + geom_bar(stat="identity",width=1)  + coord_polar("y",direction=1) + facet_wrap(~facet, ncol=num_col) + 
+
+        # Donut plot
+        p <- ggplot(mydf, aes(x="",y=value,fill=freq, width=0.3)) + geom_bar(stat="identity",width=1)  + coord_polar("y",direction=1) + facet_wrap(~facet, ncol=num_col) + 
                                                           blank_theme  + theme(axis.text.x=element_blank())
 
-        if (sum(mydf$value>0.05,na.rm=T)>0)
-        {
-                p <- p + geom_text(data=mydf[which(mydf$value>0.05),,drop=F],aes(label = percent_value, x="", y=position),color="black", size=5)
-        }
+        if (sum(mydf$value>0.01,na.rm=T)>0)
+                p <- p + geom_text(data=mydf[which(mydf$value>0.05),,drop=F],aes(label = percent_value, x=1.33, y=position),color="black", size=5)
 
-        if (sum((mydf$value!=0)&(mydf$value<=0.05), na.rm=T)>0)
-        {
-                p <- p + geom_text(data=mydf[which((mydf$value!=0)&(mydf$value<=0.05)),,drop=F],aes(label = percent_value, x=1.73, y=position),color="black", size=5)
-        }
+        # if (sum(mydf$value>0.05,na.rm=T)>0)
+        #         p <- p + geom_text(data=mydf[which(mydf$value>0.05),,drop=F],aes(label = percent_value, x=1.5, y=position),color="black", size=5)
 
-        if (sum((mydf$value>=0.01)&(mydf$value<=0.05), na.rm=T)>0)
-        {
-                p <- p + geom_segment(data=mydf[which((mydf$value>=0.01)&(mydf$value<=0.05)),,drop=F],aes(x=1.52, xend=1.65, y=position, yend=position),color="black")
-                #geom_text(data=mydf[mydf$value!=0,],aes(label = percent_value, x="", y=position),color="white", size=5)
-        }
+        # if (sum((mydf$value!=0)&(mydf$value<=0.05), na.rm=T)>0)
+        #         p <- p + geom_text(data=mydf[which((mydf$value!=0)&(mydf$value<=0.05)),,drop=F],aes(label = percent_value, x=1.73, y=position),color="black", size=5)
+
+        # if (sum((mydf$value>=0.01)&(mydf$value<=0.05), na.rm=T)>0)
+        #         p <- p + geom_segment(data=mydf[which((mydf$value>=0.01)&(mydf$value<=0.05)),,drop=F],aes(x=1.52, xend=1.65, y=position, yend=position),color="black")
 
         if (nlevels(mydf$freq)>8)
         {

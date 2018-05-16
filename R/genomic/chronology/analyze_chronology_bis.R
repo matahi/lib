@@ -17,6 +17,8 @@ analyze_chronology <- function(dat.binary, dat.genetics, Gene1, Gene2)
                                      if (nrow(dat.Gene1)==0|nrow(dat.Gene2)==0)
                                      {
                                              print("Careful binary matrix and VCF files do not correspond")
+                                             print(Gene1)
+                                             print(Gene2)
                                              return("inconclusive")
                                      } else 
                                      {

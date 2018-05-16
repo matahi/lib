@@ -2,6 +2,8 @@ plot_precedence <- function(chronology.df,
                             total.range = c(-1,0,5,10,20,50,100,200),
                             Reordering=NULL)
 {
+        # Reordering <- Reordering.features
+        # total.range <- c(-1,0,5,10,20,50,100,200)
 
         # Loading
         require(RColorBrewer)
@@ -94,16 +96,19 @@ plot_precedence <- function(chronology.df,
         names(colors.Total) <- Total.labels
 
         # odds ratio colorscale
-        colors.ratio <- c(brewer.pal(length(ratio.labels)-1, "RdBu"),"white")
+        colors.ratio <- c(brewer.pal(length(ratio.labels)-1, "RdBu"),"grey95")
         names(colors.ratio) <- c(setdiff(ratio.labels,"50%"), "50%") # TODO: rework with formatting
         colors.ratio <- colors.ratio[ratio.labels] # Reorder
 
+        colors.ratio.NA <- colors.ratio
+        if (any(is.na(Ratio.win.lower$value)))
+                colors.ratio.NA <- c(colors.ratio,"grey50")
 
         ## Plot
         pp <- ggplot() + 
-                geom_tile(data=Total.upper, aes(x=Gene1, y=Gene2, fill=value), colour="white", show.legend=F) +
+                geom_tile(data=Total.upper, aes(x=Gene1, y=Gene2, fill=value), colour="grey30", show.legend=F) +
                 geom_point(data=Total.upper, aes(x=NA, y=NA, color=value)) + # dummy plots for legend purposes
-                geom_tile(data=Ratio.win.lower, aes(x=Gene1, y=Gene2, fill=value), colour="white", show.legend=F) +
+                geom_tile(data=Ratio.win.lower, aes(x=Gene1, y=Gene2, fill=value), colour="grey30", show.legend=F) +
                 geom_point(data=Ratio.win.lower, aes(x=NA, y=NA, alpha=value)) + # dummy plots for legend purposes
                 scale_fill_manual(values=c(colors.Total, colors.ratio), na.value="grey50") + 
                 scale_x_discrete(limits=Gene.levels) +
@@ -113,24 +118,29 @@ plot_precedence <- function(chronology.df,
                 guides(color = guide_legend(title = "Co-mutation", order = 1, 
                                             override.aes = list(shape = 15, size = 5, color = colors.Total) ),
                        alpha = guide_legend(title = "Win Ratio", order = 2, 
-                                            override.aes = list(shape = 15, size = 5, color = c(colors.ratio,"grey50"), alpha=1) )) +
-                theme(legend.key = element_rect(fill = "white") )
+                                            override.aes = list(shape = 15, size = 5, color = colors.ratio.NA, alpha=1) )) +
+                theme(legend.key = element_rect(fill = "white") ) +
+                theme(axis.line = element_blank(),
+                      axis.ticks = element_blank(),
+                      panel.grid.major = element_blank())
 
         ## TODO: I AM HERE
 
       if (!is.null(Reordering))
       {
-              cols.axis <- Reordering$colours[ match(Gene.levels, Reordering$alterations )] 
-              features.sep <- Reordering %>% count(groups) %>% mutate(pos = cumsum(n)) %>% slice(1:(n()-1))
+
+              Reordering.filtered <- Reordering[ match(Gene.levels, Reordering$alterations ),]
+              cols.axis <- Reordering.filtered$colours
+              features.sep <- Reordering.filtered %>% count(groups) %>% mutate(pos = cumsum(n)) %>% slice(1:(n()-1))
+
               pp <- pp +
-                geom_hline(data= features.sep, aes(yintercept=pos+0.5), col="black") + # features separation
-                geom_vline(data= features.sep, aes(xintercept=pos+0.5), col="black") + # features separation
+                geom_hline(data= features.sep, aes(yintercept=pos+0.5), col="black", linetype = "longdash") + # features separation
+                geom_vline(data= features.sep, aes(xintercept=pos+0.5), col="black", linetype = "longdash") + # features separation
                 theme(axis.text.x = element_text(angle=90, vjust=0.5, hjust=1, colour= cols.axis),
                       axis.text.y = element_text(colour= cols.axis))
+
       }
 
         return(pp)
-
 }
-
 
