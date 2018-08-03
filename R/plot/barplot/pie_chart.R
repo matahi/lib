@@ -17,8 +17,9 @@ blank_theme <- theme_minimal()+
 # function pie_chart
 pie_chart <-  function(dat.df, feature.freq, feature.facet, num_col=NA)
 {
-        dat.df <- dat.df %>% as.data.frame()
-        # feature.freq <- "n.ALL"
+        dat.df <- as.data.frame(dat.df)
+        # dat.df <- dat.post.NOS %>% as.data.frame()
+        # feature.freq <- "reassigned"
         # feature.facet <- "new_DISEASE"
 
         if (is.na(num_col))
@@ -75,7 +76,7 @@ pie_chart <-  function(dat.df, feature.freq, feature.facet, num_col=NA)
 
         # Donut plot
         p <- ggplot(mydf, aes(x="",y=value,fill=freq, width=0.3)) + geom_bar(stat="identity",width=1)  + coord_polar("y",direction=1) + facet_wrap(~facet, ncol=num_col) + 
-                                                          blank_theme  + theme(axis.text.x=element_blank())
+                                                                 blank_theme  + theme(axis.text.x=element_blank())
 
         if (sum(mydf$value>0.01,na.rm=T)>0)
                 p <- p + geom_text(data=mydf[which(mydf$value>0.05),,drop=F],aes(label = percent_value, x=1.33, y=position),color="black", size=5)

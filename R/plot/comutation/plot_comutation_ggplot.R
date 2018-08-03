@@ -157,9 +157,11 @@ plot_comutation <- function(dat.integrate,
 
         ## Plot
         pp <- ggplot() + 
-                geom_raster(data=pairs.upper, aes(x=Var1, y=Var2, fill=value), colour="white", show.legend=F) +
+                #geom_raster(data=pairs.upper, aes(x=Var1, y=Var2, fill=value), colour="white", show.legend=F) +
+                geom_tile(data=pairs.upper, aes(x=Var1, y=Var2, fill=value), colour="black", show.legend=F) +
                 geom_point(data=pairs.upper, aes(x=NA, y=NA, color=value)) + # dummy plots for legend purposes
-                geom_raster(data=logOdds.lower, aes(x=Var1, y=Var2, fill=value), colour="white", show.legend=F) +
+                #geom_raster(data=logOdds.lower, aes(x=Var1, y=Var2, fill=value), colour="white", show.legend=F) +
+                geom_tile(data=logOdds.lower, aes(x=Var1, y=Var2, fill=value), colour="black", show.legend=F) +
                 geom_point(data=logOdds.lower, aes(x=NA, y=NA, alpha=value)) + # dummy plots for legend purposes
                 geom_point(data=PInt.lower %>% filter(adj.pval <= 0.05), aes(x=Var1, y=Var2), shape=8, colour="salmon", show.legend=F) +
                 geom_point(data=PInt.lower , aes(x=NA, y=NA, shape="P < 0.05")) + # dummy plots for legend purposes
