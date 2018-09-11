@@ -53,10 +53,12 @@ pie_chart <-  function(dat.df, feature.freq, feature.facet, num_col=NA)
 
         colnames(summary.df) <- c("freq","facet","value")
 
-        library(plyr)
         library(dplyr)
         library(scales)
-        mydf = ddply(summary.df, .(facet), transform, position = cumsum(value) - 0.5*value) 
+        mydf <- summary.df %>% group_by(facet) %>%
+                mutate(position = cumsum(value) - 0.5*value)
+        # mydf = ddply(summary.df, .(facet), transform, position = cumsum(value) - 0.5*value) 
+
         mydf$percent_value <- percent(mydf$value)
 
         mydf$percent_value[mydf$value <=0.01] <- ""

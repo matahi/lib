@@ -1,19 +1,24 @@
-predict_survival <- function (dat, surv) 
+predict_survival <- function (dat, surv, lambda.value= "1se") 
 {
         # Status?
         library(glmnet)
         tmp <- cv.glmnet(as.matrix(dat), as.matrix(surv), family="cox")
 
         # beta.mat <- tmp$beta
-        lambda.1se <- tmp$lambda.1se
+        lambda.model <- tmp$lambda.1se
 
-        tmp.bis <- glmnet(as.matrix(dat), as.matrix(surv), lambda=lambda.1se, family="cox")
+        if (lambda.value == "min")
+                lambda.model <- tmp$lambda.min
+
+        # or take the lambda optimal?
+
+        tmp.bis <- glmnet(as.matrix(dat), as.matrix(surv), lambda=lambda.model, family="cox")
 
         return(tmp.bis)
 
 }
 
-run_predict_survival <- function (dat,surv, prop=0.8) 
+run_predict_survival <- function (dat,surv, prop=0.8, lambda.value = "1se") 
 {
         idx.train <- sample(1:nrow(dat), floor(prop*nrow(dat)))
 
@@ -22,7 +27,7 @@ run_predict_survival <- function (dat,surv, prop=0.8)
         surv.train <- surv[idx.train,]
 
         # Training
-        cox.glm <- predict_survival(dat.train, surv.train)
+        cox.glm <- predict_survival(dat.train, surv.train, lambda.value = lambda.value)
  
         # Testing
         dat.test <- dat[-idx.train,]
